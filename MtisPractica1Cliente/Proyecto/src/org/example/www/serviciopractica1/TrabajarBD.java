@@ -139,6 +139,7 @@ public class TrabajarBD {
 		respuesta.localCodPostal=CodPostal;
 		respuesta.localPoblacion = "";
 		respuesta.localProvincia = "";
+		respuesta.localMensaje="";
 		String comando = "Select poblacion,provincia from codigospostales where codigoPostal="+ CodPostal;
 		 EjecutarComando(comando);
 
@@ -185,7 +186,7 @@ public class TrabajarBD {
 		String currentTime = sdf.format(presupuesto.localFechaPresupuesto);
 		String comando = "Insert into presupuestos(idCliente, referenciaProducto, cantidadProducto, fechaPresupuesto) values("
 		+ presupuesto.localIdCliente+" ,'"+presupuesto.localReferenciaProducto +"',"+presupuesto.localCantidadProducto+",'"+currentTime+"');";
-		 
+		respuesta.localMensaje="";
 		EjecutarComandoInsert(comando);
 		
 		if(resultadoInsert != 0){

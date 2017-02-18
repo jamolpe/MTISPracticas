@@ -6,7 +6,10 @@
  * by the Apache Axis2 version: 1.6.3  Built on : Jun 27, 2015 (11:17:49 BST)
  */
     package org.example.www.serviciopractica1;
-    /**
+
+import java.util.Date;
+
+/**
      *  ServicioPractica1Skeleton java skeleton for the axisService
      */
     public class ServicioPractica1Skeleton{
@@ -130,7 +133,7 @@
     			respuesta= respose.solicitar();
     		}else{
     			respuesta.localDisponibilidadPieza=false;
-    			respuesta.localFechaDisponibilidadPieza=null;
+    			respuesta.localFechaDisponibilidadPieza=new Date();
     			respuesta.localMensaje="Ha ocurrido un error al solicitar un presupuesto clave incorrecta";
     			respuesta.localPrecioPieza=0;
     		}
