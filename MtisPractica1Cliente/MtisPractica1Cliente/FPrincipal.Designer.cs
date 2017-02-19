@@ -740,11 +740,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(598, 358);
-            this.Controls.Add(this.pnlRSol);
-            this.Controls.Add(this.pnlSolicitar);
-            this.Controls.Add(this.pnlResultadoGenerar);
-            this.Controls.Add(this.pnlGenerarCodPost);
-            this.Controls.Add(this.pnlCodPestal);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnConsultCodPostal);
             this.Controls.Add(this.pnlIBAN);
@@ -753,8 +748,13 @@
             this.Controls.Add(this.btnValidarIBAN);
             this.Controls.Add(this.btnSolicitarPres);
             this.Controls.Add(this.btnObtenerPresupuesto);
-            this.Controls.Add(this.pnlResultadosCodPost);
             this.Controls.Add(this.panelResultadoValidacion);
+            this.Controls.Add(this.pnlSolicitar);
+            this.Controls.Add(this.pnlGenerarCodPost);
+            this.Controls.Add(this.pnlCodPestal);
+            this.Controls.Add(this.pnlRSol);
+            this.Controls.Add(this.pnlResultadoGenerar);
+            this.Controls.Add(this.pnlResultadosCodPost);
             this.Name = "FPrincipal";
             this.Text = "Pruebas de Servicio";
             this.pnlValidarNif.ResumeLayout(false);

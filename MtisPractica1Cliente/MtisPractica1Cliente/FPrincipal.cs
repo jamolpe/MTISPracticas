@@ -21,6 +21,8 @@ namespace MtisPractica1Cliente
         {
             InitializeComponent();
             Servicio = new localhost.ServicioPractica1();
+            pnlValidarNif.BringToFront();
+            panelResultadoValidacion.BringToFront();
         }
 
         private void btnCompNIF_Click(object sender, EventArgs e)
@@ -141,9 +143,12 @@ namespace MtisPractica1Cliente
             if(mensaje != "")
             {
                 txtMensaje.Text = mensaje;
-            }else
+            }else if(Poblacion != "" && Provincia !="")
             {
                 txtMensaje.Text = "Correcto";
+            }else if(mensaje == "" && Poblacion == "" && Provincia == "")
+            {
+                txtMensaje.Text = "No hay datos";
             }
 
             txtCodPosResult.Text = txtCodPostal.Text;
