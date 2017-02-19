@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/ServicioPractica1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ServicioPractica1" targetNamespace="http://www.example.org/ServicioPractica1/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.example.org/ServicioPractica1/">
+      <xsd:element name="ValidarNIF">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="NIF" type="xsd:string" />
+
+          	<xsd:element name="SoadKey" type="xsd:string"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ValidarNIFResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Validado" type="xsd:boolean" />
+          	<xsd:element name="Mensaje" type="xsd:string"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+            <xsd:element name="NewElement" type="xsd:string"></xsd:element>
+            <xsd:element name="ValidarIBAN">
+            	<xsd:complexType>
+            		<xsd:sequence>
+            			<xsd:element name="IBAN" type="xsd:string"></xsd:element>
+            			<xsd:element name="SoapKey"
+            				type="xsd:string">
+            			</xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ValidarIBANResponse">
+            	<xsd:complexType>
+            		<xsd:sequence>
+
+            			<xsd:element name="Validado"
+            				type="xsd:boolean">
+            			</xsd:element>
+            			<xsd:element name="Mensaje"
+            				type="xsd:string">
+            			</xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ConsultaCodigoPostal">
+            	<xsd:complexType>
+            		<xsd:sequence>
+
+            			<xsd:element name="CODPOS" type="xsd:string"></xsd:element>
+            			<xsd:element name="SoapKey"
+            				type="xsd:string">
+            			</xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ConsultaCodigoPostalResponse">
+            	<xsd:complexType>
+            		<xsd:sequence>
+
+            			<xsd:element name="CodPostal"
+            				type="xsd:string">
+            			</xsd:element>
+            			<xsd:element name="Poblacion"
+            				type="xsd:string">
+            			</xsd:element>
+            			<xsd:element name="Provincia"
+            				type="xsd:string">
+            			</xsd:element>
+            			<xsd:element name="Mensaje"
+            				type="xsd:string">
+            			</xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GenerarPresupuesto">
+            	<xsd:complexType>
+            		<xsd:sequence>
+
+            			<xsd:element name="fechaPresupuesto"
+            				type="xsd:date">
+            			</xsd:element>
+            			<xsd:element name="idCliente" type="xsd:int">
+            			</xsd:element>
+            			<xsd:element name="referenciaProducto"
+            				type="xsd:string">
+            			</xsd:element>
+            			<xsd:element name="cantidadProducto"
+            				type="xsd:int">
+            			</xsd:element>
+            			<xsd:element name="SoapKey"
+            				type="xsd:string">
+            			</xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GenerarPresupuestoResponse">
+            	<xsd:complexType>
+            		<xsd:sequence>
+
+            			<xsd:element name="idPresupuesto"
+            				type="xsd:int">
+            			</xsd:element>
+            			<xsd:element
+            				name="presupuestoGeneradoCorrectamente"
+            				type="xsd:boolean">
+            			</xsd:element>
+            			<xsd:element name="Mensaje"
+            				type="xsd:string">
+            			</xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SolicitarPresupuesto">
+            	<xsd:complexType>
+            		<xsd:sequence>
+
+            			<xsd:element name="ReferenciaPieza"
+            				type="xsd:string">
+            			</xsd:element>
+            			<xsd:element name="idProveedor"
+            				type="xsd:int">
+            			</xsd:element>
+            			<xsd:element name="soapKey"
+            				type="xsd:string">
+            			</xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SolicitarPresupuestoResponse">
+            	<xsd:complexType>
+            		<xsd:sequence>
+
+            			<xsd:element name="PrecioPieza"
+            				type="xsd:float">
+            			</xsd:element>
+            			<xsd:element name="DisponibilidadPieza"
+            				type="xsd:boolean">
+            			</xsd:element>
+            			<xsd:element name="FechaDisponibilidadPieza"
+            				type="xsd:date">
+            			</xsd:element>
+            			<xsd:element name="Mensaje"
+            				type="xsd:string">
+            			</xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ValidarNIFRequest">
+    <wsdl:part element="tns:ValidarNIF" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="ValidarNIFResponse">
+    <wsdl:part element="tns:ValidarNIFResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="ValidarIBANRequest">
+  	<wsdl:part name="parameters" element="tns:ValidarIBAN"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ValidarIBANResponse">
+  	<wsdl:part name="parameters" element="tns:ValidarIBANResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ConsultaCodigoPostalRequest">
+  	<wsdl:part name="parameters" element="tns:ConsultaCodigoPostal"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ConsultaCodigoPostalResponse">
+  	<wsdl:part name="parameters" element="tns:ConsultaCodigoPostalResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GenerarPresupuestoRequest">
+  	<wsdl:part name="parameters" element="tns:GenerarPresupuesto"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GenerarPresupuestoResponse">
+  	<wsdl:part name="parameters" element="tns:GenerarPresupuestoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SolicitarPresupuestoRequest">
+  	<wsdl:part name="parameters" element="tns:SolicitarPresupuesto"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SolicitarPresupuestoResponse">
+  	<wsdl:part name="parameters" element="tns:SolicitarPresupuestoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ServicioPractica1">
+    <wsdl:operation name="ValidarNIF">
+      <wsdl:input message="tns:ValidarNIFRequest"/>
+      <wsdl:output message="tns:ValidarNIFResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="ValidarIBAN">
+    	<wsdl:input message="tns:ValidarIBANRequest"></wsdl:input>
+    	<wsdl:output message="tns:ValidarIBANResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultaCodigoPostal">
+    	<wsdl:input message="tns:ConsultaCodigoPostalRequest"></wsdl:input>
+    	<wsdl:output message="tns:ConsultaCodigoPostalResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GenerarPresupuesto">
+    	<wsdl:input message="tns:GenerarPresupuestoRequest"></wsdl:input>
+    	<wsdl:output message="tns:GenerarPresupuestoResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SolicitarPresupuesto">
+    	<wsdl:input message="tns:SolicitarPresupuestoRequest"></wsdl:input>
+    	<wsdl:output message="tns:SolicitarPresupuestoResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServicioPractica1SOAP"
+  	type="tns:ServicioPractica1">
+  	<soap:binding style="document"
+  		transport="http://schemas.xmlsoap.org/soap/http" />
+  	<wsdl:operation name="ValidarNIF">
+  		<soap:operation
+  			soapAction="http://www.example.org/ServicioPractica1/ValidarNIF" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  	<wsdl:operation name="ValidarIBAN">
+  		<soap:operation
+  			soapAction="http://www.example.org/ServicioPractica1/ValidarIBAN" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  	<wsdl:operation name="ConsultaCodigoPostal">
+  		<soap:operation
+  			soapAction="http://www.example.org/ServicioPractica1/ConsultaCodigoPostal" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  	<wsdl:operation name="GenerarPresupuesto">
+  		<soap:operation
+  			soapAction="http://www.example.org/ServicioPractica1/GenerarPresupuesto" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  	<wsdl:operation name="SolicitarPresupuesto">
+  		<soap:operation
+  			soapAction="http://www.example.org/ServicioPractica1/SolicitarPresupuesto" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServicioPractica1">
+    <wsdl:port binding="tns:ServicioPractica1SOAP" name="ServicioPractica1SOAP">
+      <soap:address location="http://www.example.org/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
