@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:GestionAlmacen="http://www.example.org/GestionAlmacen/" xmlns:GestionProveedor1="http://www.example.org/GestionProveedor1/" xmlns:GestionProveedor2="http://www.example.org/GestionProveedor2/" xmlns:GestionProveedor3="http://www.example.org/GestionProveedor3/" xmlns:invoke.bpel.mtis="http://invoke.bpel.mtis/">
+  <process name="invoke.bpel.mtis:CompraProcess">
+    <active>true</active>
+    <retired>false</retired>
+    <process-events generate="all"/>
+    <provide partnerLink="client">
+      <service name="invoke.bpel.mtis:CompraProcessService" port="CompraProcessPort"/>
+    </provide>
+    <invoke partnerLink="comprobarStockPL">
+      <service name="GestionAlmacen:GestionAlmacen" port="GestionAlmacenSOAP"/>
+    </invoke>
+    <invoke partnerLink="SolicitarPresupuestoProv1PL">
+      <service name="GestionProveedor1:GestionProveedor1" port="GestionProveedor1SOAP"/>
+    </invoke>
+    <invoke partnerLink="SolicitarPresupuestoProv2PL">
+      <service name="GestionProveedor2:GestionProveedor2" port="GestionProveedor2SOAP"/>
+    </invoke>
+    <invoke partnerLink="SolicitarPresupuestoProv3PLNuevo">
+      <service name="GestionProveedor3:GestionProveedor3" port="GestionProveedor3SOAP"/>
+    </invoke>
+  </process>
+</deploy>
