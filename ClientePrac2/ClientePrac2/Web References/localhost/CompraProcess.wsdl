@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:wsdl1="http://www.example.org/GestionProveedor1/" xmlns:wsdl3="http://www.example.org/GestionProveedor3/" xmlns:wsdl2="http://www.example.org/GestionProveedor2/" xmlns:tns="http://invoke.bpel.mtis/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://www.example.org/GestionAlmacen/" name="CompraProcess" targetNamespace="http://invoke.bpel.mtis/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <plnk:partnerLinkType name="comprobarStockPLN">
+    <plnk:role name="comprobarStockRole" portType="wsdl:GestionAlmacen" />
+  </plnk:partnerLinkType>
+  <plnk:partnerLinkType name="ActualizarStockPLN">
+    <plnk:role name="ActualizarStockRole" portType="wsdl:GestionAlmacen" />
+  </plnk:partnerLinkType>
+  <plnk:partnerLinkType name="SolicitarPresupuestoProv1PLN">
+    <plnk:role name="SolicitarPresupuestoProv1Role" portType="wsdl1:GestionProveedor1" />
+  </plnk:partnerLinkType>
+  <plnk:partnerLinkType name="SolicitarPresupuestoProv2PLN">
+    <plnk:role name="SolicitarPresupuestoProv2Role" portType="wsdl2:GestionProveedor2" />
+  </plnk:partnerLinkType>
+  <plnk:partnerLinkType name="SolicitarPresupuestoProv3PLN">
+    <plnk:role name="SolicitarPresupuestoProv3Role" portType="wsdl3:GestionProveedor3" />
+  </plnk:partnerLinkType>
+  <plnk:partnerLinkType name="SolicitarPresupuestoProv3PLNuevoN">
+    <plnk:role name="SolicitarPresupuestoProv3PLNuevoRole" portType="wsdl3:GestionProveedor3" />
+  </plnk:partnerLinkType>
+  <plnk:partnerLinkType name="CompraProcess">
+    <plnk:role name="CompraProcessProvider" portType="tns:CompraProcess" />
+  </plnk:partnerLinkType>
+  <import namespace="http://www.example.org/GestionAlmacen/" location="GestionAlmacen.wsdl" />
+  <import namespace="http://www.example.org/GestionProveedor1/" location="GestionProveedor1.wsdl" />
+  <import namespace="http://www.example.org/GestionProveedor2/" location="GestionProveedor2.wsdl" />
+  <import namespace="http://www.example.org/GestionProveedor3/" location="GestionProveedor3.wsdl" />
+  <types>
+    <schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://invoke.bpel.mtis/" xmlns="http://www.w3.org/2001/XMLSchema">
+      <element name="CompraProcessRequest">
+        <complexType>
+          <sequence>
+            <element name="unidades" type="int" />
+            <element name="referencia" type="string" />
+          </sequence>
+        </complexType>
+      </element>
+      <element name="CompraProcessResponse">
+        <complexType>
+          <sequence>
+            <element name="result" type="boolean" />
+          </sequence>
+        </complexType>
+      </element>
+    </schema>
+  </types>
+  <message name="CompraProcessRequestMessage">
+    <part name="payload" element="tns:CompraProcessRequest" />
+  </message>
+  <message name="CompraProcessResponseMessage">
+    <part name="payload" element="tns:CompraProcessResponse" />
+  </message>
+  <portType name="CompraProcess">
+    <operation name="process">
+      <input message="tns:CompraProcessRequestMessage" />
+      <output message="tns:CompraProcessResponseMessage" />
+    </operation>
+  </portType>
+  <binding name="CompraProcessBinding" type="tns:CompraProcess">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="process">
+      <soap:operation soapAction="http://invoke.bpel.mtis/process" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="CompraProcessService">
+    <port name="CompraProcessPort" binding="tns:CompraProcessBinding">
+      <soap:address location="http://localhost:8080/ode/processes/CompraProcess" />
+    </port>
+  </service>
+</definitions>

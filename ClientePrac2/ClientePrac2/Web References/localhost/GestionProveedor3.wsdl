@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/GestionProveedor3/" name="GestionProveedor3" targetNamespace="http://www.example.org/GestionProveedor3/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.example.org/GestionProveedor3/">
+      <xsd:element name="SolicitarPresupuesto">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="numeroUnidades" type="xsd:int" />
+            <xsd:element name="referenciaProducto" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SolicitarPresupuestoResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="respuesta" type="xsd:float" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="OrdenarCompra">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="numeroUnidades" type="xsd:int" />
+            <xsd:element name="referenciaProducto" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="OrdenarCompraResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="respuesta" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="SolicitarPresupuestoRequest">
+    <wsdl:part name="parameters" element="tns:SolicitarPresupuesto" />
+  </wsdl:message>
+  <wsdl:message name="SolicitarPresupuestoResponse">
+    <wsdl:part name="parameters" element="tns:SolicitarPresupuestoResponse" />
+  </wsdl:message>
+  <wsdl:message name="OrdenarCompraRequest">
+    <wsdl:part name="parameters" element="tns:OrdenarCompra" />
+  </wsdl:message>
+  <wsdl:message name="OrdenarCompraResponse">
+    <wsdl:part name="parameters" element="tns:OrdenarCompraResponse" />
+  </wsdl:message>
+  <wsdl:portType name="GestionProveedor3">
+    <wsdl:operation name="SolicitarPresupuesto">
+      <wsdl:input message="tns:SolicitarPresupuestoRequest" />
+      <wsdl:output message="tns:SolicitarPresupuestoResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="OrdenarCompra">
+      <wsdl:input message="tns:OrdenarCompraRequest" />
+      <wsdl:output message="tns:OrdenarCompraResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GestionProveedor3SOAP" type="tns:GestionProveedor3">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SolicitarPresupuesto">
+      <soap:operation soapAction="http://www.example.org/GestionProveedor3/SolicitarPresupuesto" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrdenarCompra">
+      <soap:operation soapAction="http://www.example.org/GestionProveedor3/OrdenarCompra" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GestionProveedor3">
+    <wsdl:port name="GestionProveedor3SOAP" binding="tns:GestionProveedor3SOAP">
+      <soap:address location="http://localhost:9080/ServiciosPracticaNueva/services/GestionProveedor3" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
