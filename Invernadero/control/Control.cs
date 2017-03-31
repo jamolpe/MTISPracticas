@@ -14,7 +14,7 @@ namespace control
 {
     public partial class Control : Form
     {
-
+        String info;
         private ISession session;
         private IMessageProducer replyProducer;
         public Control()
@@ -88,6 +88,10 @@ namespace control
             }
         }
 
+        public void rellenarinfo(String str)
+        {
+            TxboxResult.Text += str;
+        }
         public void Calculo_Cliente(IMessage message)
         {
             try
@@ -99,7 +103,8 @@ namespace control
                 // Determine the text to send back to the client.
                 var textMessage = message as ITextMessage;
 
-                TxboxResult.Text = "Temperatura y humedad de invernadero " + message.NMSReplyTo.ToString() + " es -> " + textMessage.Text;
+                String info = "Temperatura y humedad de invernadero " + message.NMSReplyTo.ToString() + " es -> " + textMessage.Text;
+                
 
                 if (textMessage == null)
                     response.Text = "false";
@@ -133,6 +138,7 @@ namespace control
                 // Send the response message to the reply-to destination as received in the message header.  This is the
                 // temporary queue that we created in the client application.
                 this.replyProducer.Send(message.NMSReplyTo, response);
+                rellenarinfo(info);
             }
             catch (NMSException ex)
             {

@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncMessageHelper.cs" />
     <Compile Include="Invernadero.cs">
       <SubType>Form</SubType>
     </Compile>
