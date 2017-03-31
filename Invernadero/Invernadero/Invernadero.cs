@@ -63,7 +63,7 @@ namespace Invernadero
             
             lbbTemp.Text = temp.ToString() + " °C";
             lblHumedad.Text = humedad.ToString() + " %";
-            var mensaje = this.CreateTextMessage(lbbTemp.Text+"|"+lblHumedad.Text);
+            var mensaje = this.CreateTextMessage(temp.ToString()+"|"+ humedad.ToString());
             var respuesta = this.SendMessage(mensaje);
         }
 

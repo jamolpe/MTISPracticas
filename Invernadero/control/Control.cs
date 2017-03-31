@@ -90,7 +90,7 @@ namespace control
 
         public void rellenarinfo(String str)
         {
-            TxboxResult.Text += str;
+            //TxboxResult.Text += str;
         }
         public void Calculo_Cliente(IMessage message)
         {
@@ -112,8 +112,9 @@ namespace control
                 {
                     string[] datos = textMessage.Text.Split('|');
                     string temperatura = datos[0];
+                    temperatura = temperatura.Replace(',', '.');
                     string humedad = datos[1];
-                    if (Int32.Parse(temperatura)>50)
+                    if (Double.Parse(temperatura)>50)
                     {
                         response.Text = "ActivarVentiladores|";
                     }
