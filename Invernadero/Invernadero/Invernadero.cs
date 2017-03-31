@@ -1,4 +1,4 @@
-﻿
+﻿//mas info http://blog.cylewitruk.com/2011/08/synchronous-request-response-messaging-with-nms-and-activemq/
 using System;
 using System.Net.Sockets;
 using System.Windows.Forms;
