@@ -28,12 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.TxboxResult = new System.Windows.Forms.RichTextBox();
+            this.SuspendLayout();
+            // 
+            // TxboxResult
+            // 
+            this.TxboxResult.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.TxboxResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxboxResult.ForeColor = System.Drawing.SystemColors.Info;
+            this.TxboxResult.HideSelection = false;
+            this.TxboxResult.Location = new System.Drawing.Point(12, 12);
+            this.TxboxResult.Name = "TxboxResult";
+            this.TxboxResult.ReadOnly = true;
+            this.TxboxResult.Size = new System.Drawing.Size(339, 310);
+            this.TxboxResult.TabIndex = 0;
+            this.TxboxResult.Text = "";
+            this.TxboxResult.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
+            // 
+            // Control
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(363, 334);
+            this.Controls.Add(this.TxboxResult);
+            this.Name = "Control";
+            this.Text = "Control";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.RichTextBox TxboxResult;
     }
 }
 
