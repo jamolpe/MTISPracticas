@@ -1,35 +1,35 @@
 ﻿using Apache.NMS;
-using Apache.NMS.ActiveMQ;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace control
+namespace ControlInvernaderos
 {
-    public partial class Control : Form
+    public class Program
     {
+
         String info;
         private ISession session;
         private IMessageProducer replyProducer;
-        public Control()
-        {
-            InitializeComponent();
 
-            IniciarActiveMQServer();
-
-        }
-
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        Program()
         {
 
         }
 
+
+        public static void Main(string[] args)
+        {
+
+            Program prog = new Program();
+            prog.IniciarActiveMQServer();
+            while (true)
+            {
+
+            }
+        }
         private static String env(String key, String defaultValue)
         {
             String rc = System.Environment.GetEnvironmentVariable(key);
@@ -49,17 +49,17 @@ namespace control
             return defaultValue;
         }
 
-        private void IniciarActiveMQServer()
+        public void IniciarActiveMQServer()
         {
 
-            TxboxResult.Text += "Iniciando control..\n";
+            Console.WriteLine("Iniciando control..");
 
-            String destinationQueue="control";
+            String destinationQueue = "control";
             String user = env("ACTIVEMQ_USER", "admin");
             String password = env("ACTIVEMQ_PASSWORD", "password");
             String host = env("ACTIVEMQ_HOST", "localhost");
             int port = Int32.Parse(env("ACTIVEMQ_PORT", "61616"));
-            
+
             String brokerUri = "activemq:tcp://" + host + ":" + port + "?transport.useLogging=true";
 
             var connectionFactory = new NMSConnectionFactory(brokerUri);
@@ -72,7 +72,7 @@ namespace control
 
                 this.session = connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
 
-                var queue = this.session.GetDestination(destinationQueue);
+                var queue = session.GetDestination(destinationQueue);
 
                 this.replyProducer = this.session.CreateProducer();
                 this.replyProducer.DeliveryMode = MsgDeliveryMode.NonPersistent;
@@ -82,15 +82,15 @@ namespace control
                 // Wire-up an event to be fired when a message is received from the queue.
                 consumer.Listener += new MessageListener(Calculo_Cliente);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TxboxResult.Text = "error " + ex.ToString();
+                Console.WriteLine("error " + ex.ToString());
             }
         }
 
         public void rellenarinfo(String str)
         {
-            //TxboxResult.Text += str;
+            Console.WriteLine(str);
         }
         public void Calculo_Cliente(IMessage message)
         {
@@ -98,13 +98,13 @@ namespace control
             {
                 // Create the response message.  We'll send a simple text-based message back.
                 var response = this.session.CreateTextMessage();
-                
+
 
                 // Determine the text to send back to the client.
                 var textMessage = message as ITextMessage;
 
                 String info = "Temperatura y humedad de invernadero " + message.NMSReplyTo.ToString() + " es -> " + textMessage.Text;
-                
+
 
                 if (textMessage == null)
                     response.Text = "false";
@@ -112,12 +112,13 @@ namespace control
                 {
                     string[] datos = textMessage.Text.Split('|');
                     string temperatura = datos[0];
-                    
+
                     string humedad = datos[1];
                     double temp = Double.Parse(temperatura);
                     if (temp > 50.0)
                     {
                         response.Text = "ActivarVentiladores|";
+                        rellenarinfo("activados los ventiladores");
                     }
                     else
                     {
@@ -126,6 +127,7 @@ namespace control
                     if (Int32.Parse(humedad) > 50)
                     {
                         response.Text += "ActivarHumificador";
+                        rellenarinfo("activados los humificadores");
                     }
                     else
                     {
@@ -144,7 +146,7 @@ namespace control
             }
             catch (NMSException ex)
             {
-                TxboxResult.Text = "error "+ ex.ToString();
+                Console.WriteLine("error " + ex.ToString());
             }
         }
     }

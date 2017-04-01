@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invernadero", "Invernadero\Invernadero.csproj", "{4452D960-26FD-4CB0-AD00-EB84E51CD36E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "control", "control\control.csproj", "{FFB56FB6-4305-4158-B8DE-B58F155A06EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlInvernaderos", "ControlInvernaderos\ControlInvernaderos.csproj", "{15FE0093-84B4-4708-B4FE-E5F54373529D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{4452D960-26FD-4CB0-AD00-EB84E51CD36E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4452D960-26FD-4CB0-AD00-EB84E51CD36E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4452D960-26FD-4CB0-AD00-EB84E51CD36E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FFB56FB6-4305-4158-B8DE-B58F155A06EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFB56FB6-4305-4158-B8DE-B58F155A06EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFB56FB6-4305-4158-B8DE-B58F155A06EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFB56FB6-4305-4158-B8DE-B58F155A06EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15FE0093-84B4-4708-B4FE-E5F54373529D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15FE0093-84B4-4708-B4FE-E5F54373529D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15FE0093-84B4-4708-B4FE-E5F54373529D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15FE0093-84B4-4708-B4FE-E5F54373529D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

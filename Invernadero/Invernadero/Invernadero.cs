@@ -65,6 +65,27 @@ namespace Invernadero
             lblHumedad.Text = humedad.ToString() + " %";
             var mensaje = this.CreateTextMessage(temp.ToString()+"|"+ humedad.ToString());
             var respuesta = this.SendMessage(mensaje);
+            var res = respuesta as ITextMessage;
+            string[] respuestas = res.Text.Split('|');
+            string acciontemp = respuestas[0];
+            string aaccionhumifi = respuestas[1];
+
+            if (acciontemp== "ActivarVentiladores")
+            {
+                acventiladores = true;
+            }
+            else
+            {
+                acventiladores = false;
+            }
+            if (aaccionhumifi== "ActivarHumificador")
+            {
+                achumificadores = true;
+            }
+            else
+            {
+                achumificadores = false;
+            }
         }
 
         private void subirTemp()
