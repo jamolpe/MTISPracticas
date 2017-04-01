@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using Apache.NMS.ActiveMQ;
 using Apache.NMS;
+using System.Drawing;
 
 namespace Invernadero
 {
@@ -74,42 +75,44 @@ namespace Invernadero
 
 
             ComprobarRespuestaHumificador();
-            //var res = respuesta as ITextMessage;
-            //string[] respuestas = res.Text.Split('|');
-            //string acciontemp = respuestas[0];
-            //string aaccionhumifi = respuestas[1];
+            ComprobarRespuestaTemperaturas();
 
-            //if (acciontemp == "ActivarVentiladores")
-            //{
-            //    acventiladores = true;
-            //}
-            //else
-            //{
-            //    acventiladores = false;
-            //}
-            //if (aaccionhumifi == "ActivarHumificador")
-            //{
-            //    achumificadores = true;
-            //}
-            //else
-            //{
-            //    achumificadores = false;
-            //}
+        }
+
+        public void ComprobarRespuestaTemperaturas()
+        {
+            var mensaje = this.CreateTextMessage(txtNombreInver.Text + "|" + temp.ToString());
+            var respuesta = EnviarMensajeTemp(mensaje);
+            var res = respuesta as ITextMessage;
+
+            if (res.Text == "true")
+            {
+                acventiladores = true;
+                txtboxVentiladores.BackColor = Color.LimeGreen;
+            }
+            else
+            {
+                acventiladores = false;
+                txtboxVentiladores.BackColor = Color.White;
+            }
+
         }
 
         public void ComprobarRespuestaHumificador()
         {
-            var mensaje = this.CreateTextMessage(humedad.ToString());
+            var mensaje = this.CreateTextMessage(txtNombreInver.Text+ "|"+ humedad.ToString());
             var respuesta = EnviarMensajeHum(mensaje);
             var res = respuesta as ITextMessage;
 
             if (res.Text == "true")
             {
                 achumificadores = true;
+                txtboxDeshumificadores.BackColor = Color.LimeGreen;
             }
             else
             {
                 achumificadores = false;
+                txtboxDeshumificadores.BackColor = Color.White;
             }
             
         }
@@ -129,22 +132,15 @@ namespace Invernadero
         private void bajarTemp()
         {
             Random random = new Random();
-            if (temp>30)
-            {
-                temp = temp - Math.Round((random.NextDouble() * (8 - 0) + 0), 2);
-            }
-      
+
+            temp = temp - Math.Round((random.NextDouble() * (8 - 0) + 0), 2);
+
         }
 
         private void bajarHumedad()
         {
             Random random2 = new Random();
-
-            if (humedad>35)
-            {
-                humedad = humedad - Math.Round(random2.NextDouble() * (9 - 0) + 0);
-            }
-            
+             humedad = humedad - Math.Round(random2.NextDouble() * (9 - 0) + 0);
         }
 
         public void ActiveMQInvernadero()
@@ -443,7 +439,7 @@ namespace Invernadero
                 this.EnviarMensajeConf(mensaje);
 
                 InitTimer();
-                lblPrincipal.Text = "Invernadero";
+                lblPrincipal.Text = "Invernadero "+ txtNombreInver.Text;
        
             }
 

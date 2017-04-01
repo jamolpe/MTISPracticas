@@ -112,18 +112,20 @@ namespace ControlInvernaderos
 
                 // Determine the text to send back to the client.
                 var textMessage = message as ITextMessage;
-
-                String info = "Humedad invernadero " + message.NMSReplyTo.ToString() + " es -> " + textMessage.Text;
+                string[] mns = textMessage.Text.Split('|');
+                String info = "Humedad invernadero " + mns[0] + " es -> " + mns[1];
 
 
                 if (textMessage == null)
                     response.Text = "false";
                 else
                 {
-                    int hum = int.Parse(textMessage.Text.ToString());
-                    if (hum > 50)
+                    int hum = int.Parse(mns[1]);
+                    if (hum > referenciasHume[mns[0]])
                     {
                         response.Text = "true";
+                        info += "\n";
+                        info += "Activando deshumificador";
                     }
                     else
                     {
@@ -147,7 +149,7 @@ namespace ControlInvernaderos
         {
             try
             {
-                String info = "Configuracion realizada";
+                String info = "";
                 // Create the response message.  We'll send a simple text-based message back.
                 var response = this.session.CreateTextMessage();
 
@@ -160,8 +162,11 @@ namespace ControlInvernaderos
                 else
                 {
                     string[] datos = textMessage.Text.Split('|');
+                    info = "Configuracion realizada para el invernadero " + datos[0]+"\n";
                     referenciasTemp.Add(datos[0],Int32.Parse(datos[1]));
                     referenciasHume.Add(datos[0], Int32.Parse(datos[2]));
+                    info += "Humedad maxima = " + datos[2]+"\n";
+                    info += "Temperatura maxima = " + datos[1] + "\n";
                 }
 
                 // Set the correlation ID to that of the received message.
@@ -187,18 +192,20 @@ namespace ControlInvernaderos
 
                 // Determine the text to send back to the client.
                 var textMessage = message as ITextMessage;
-
-                String info = "Temperatura invernadero " + message.NMSReplyTo.ToString() + " es -> " + textMessage.Text;
+                string[] mns = textMessage.Text.Split('|');
+                String info = "Temperatura invernadero " + mns[0] + " es -> " + mns[1];
 
 
                 if (textMessage == null)
                     response.Text = "false";
                 else
                 {
-                    int temp = int.Parse(textMessage.Text.ToString());
-                    if (temp>50)
+                    Double temp = Double.Parse(mns[1]);
+                    if (temp>referenciasTemp[mns[0]])
                     {
                         response.Text = "true";
+                        info += "\n";
+                        info += "Activando ventilador";
                     }
                     else
                     {

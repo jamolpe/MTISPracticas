@@ -35,14 +35,18 @@
             this.label3 = new System.Windows.Forms.Label();
             this.pnl1 = new System.Windows.Forms.Panel();
             this.pnl2 = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtboxTemp = new System.Windows.Forms.TextBox();
-            this.txtboxHumedadmax = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtNombreInver = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.txtNombreInver = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.txtboxHumedadmax = new System.Windows.Forms.TextBox();
+            this.txtboxTemp = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtboxDeshumificadores = new System.Windows.Forms.TextBox();
+            this.txtboxVentiladores = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.pnl1.SuspendLayout();
             this.pnl2.SuspendLayout();
             this.SuspendLayout();
@@ -50,10 +54,10 @@
             // lblPrincipal
             // 
             this.lblPrincipal.AutoSize = true;
-            this.lblPrincipal.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPrincipal.Location = new System.Drawing.Point(89, 21);
+            this.lblPrincipal.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPrincipal.Location = new System.Drawing.Point(67, 26);
             this.lblPrincipal.Name = "lblPrincipal";
-            this.lblPrincipal.Size = new System.Drawing.Size(118, 42);
+            this.lblPrincipal.Size = new System.Drawing.Size(102, 37);
             this.lblPrincipal.TabIndex = 0;
             this.lblPrincipal.Text = "label2";
             // 
@@ -99,6 +103,10 @@
             // 
             // pnl1
             // 
+            this.pnl1.Controls.Add(this.label9);
+            this.pnl1.Controls.Add(this.label8);
+            this.pnl1.Controls.Add(this.txtboxVentiladores);
+            this.pnl1.Controls.Add(this.txtboxDeshumificadores);
             this.pnl1.Controls.Add(this.lblPrincipal);
             this.pnl1.Controls.Add(this.label2);
             this.pnl1.Controls.Add(this.label3);
@@ -124,47 +132,21 @@
             this.pnl2.Size = new System.Drawing.Size(323, 240);
             this.pnl2.TabIndex = 7;
             // 
-            // label4
+            // label7
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(83, 104);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(153, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Introduce Temperatura maxima";
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(107, 53);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(104, 13);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "Nombre Invernadero";
             // 
-            // label5
+            // txtNombreInver
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(96, 163);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(137, 13);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Introduce humedad maxima";
-            // 
-            // txtboxTemp
-            // 
-            this.txtboxTemp.Location = new System.Drawing.Point(86, 137);
-            this.txtboxTemp.Name = "txtboxTemp";
-            this.txtboxTemp.Size = new System.Drawing.Size(150, 20);
-            this.txtboxTemp.TabIndex = 2;
-            // 
-            // txtboxHumedadmax
-            // 
-            this.txtboxHumedadmax.Location = new System.Drawing.Point(86, 188);
-            this.txtboxHumedadmax.Name = "txtboxHumedadmax";
-            this.txtboxHumedadmax.Size = new System.Drawing.Size(150, 20);
-            this.txtboxHumedadmax.TabIndex = 3;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(121, 214);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "configurar";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.txtNombreInver.Location = new System.Drawing.Point(110, 73);
+            this.txtNombreInver.Name = "txtNombreInver";
+            this.txtNombreInver.Size = new System.Drawing.Size(100, 20);
+            this.txtNombreInver.TabIndex = 6;
             // 
             // label6
             // 
@@ -176,29 +158,90 @@
             this.label6.TabIndex = 5;
             this.label6.Text = "Introduce valores de configuracion";
             // 
-            // txtNombreInver
+            // button1
             // 
-            this.txtNombreInver.Location = new System.Drawing.Point(110, 73);
-            this.txtNombreInver.Name = "txtNombreInver";
-            this.txtNombreInver.Size = new System.Drawing.Size(100, 20);
-            this.txtNombreInver.TabIndex = 6;
+            this.button1.Location = new System.Drawing.Point(121, 214);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "configurar";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label7
+            // txtboxHumedadmax
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(107, 53);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(104, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Nombre Invernadero";
+            this.txtboxHumedadmax.Location = new System.Drawing.Point(86, 188);
+            this.txtboxHumedadmax.Name = "txtboxHumedadmax";
+            this.txtboxHumedadmax.Size = new System.Drawing.Size(150, 20);
+            this.txtboxHumedadmax.TabIndex = 3;
+            // 
+            // txtboxTemp
+            // 
+            this.txtboxTemp.Location = new System.Drawing.Point(86, 137);
+            this.txtboxTemp.Name = "txtboxTemp";
+            this.txtboxTemp.Size = new System.Drawing.Size(150, 20);
+            this.txtboxTemp.TabIndex = 2;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(96, 163);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(137, 13);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Introduce humedad maxima";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(83, 104);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(153, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Introduce Temperatura maxima";
+            // 
+            // txtboxDeshumificadores
+            // 
+            this.txtboxDeshumificadores.Enabled = false;
+            this.txtboxDeshumificadores.Location = new System.Drawing.Point(43, 176);
+            this.txtboxDeshumificadores.Name = "txtboxDeshumificadores";
+            this.txtboxDeshumificadores.Size = new System.Drawing.Size(22, 20);
+            this.txtboxDeshumificadores.TabIndex = 5;
+            // 
+            // txtboxVentiladores
+            // 
+            this.txtboxVentiladores.BackColor = System.Drawing.SystemColors.Window;
+            this.txtboxVentiladores.Enabled = false;
+            this.txtboxVentiladores.Location = new System.Drawing.Point(43, 211);
+            this.txtboxVentiladores.Name = "txtboxVentiladores";
+            this.txtboxVentiladores.Size = new System.Drawing.Size(22, 20);
+            this.txtboxVentiladores.TabIndex = 6;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(93, 179);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(91, 13);
+            this.label8.TabIndex = 7;
+            this.label8.Text = "Deshumificadores";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(93, 214);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(65, 13);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Ventiladores";
             // 
             // Invernadero
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(344, 261);
-            this.Controls.Add(this.pnl2);
             this.Controls.Add(this.pnl1);
+            this.Controls.Add(this.pnl2);
             this.Name = "Invernadero";
             this.Text = "Invernadero";
             this.pnl1.ResumeLayout(false);
@@ -227,6 +270,10 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtNombreInver;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtboxDeshumificadores;
+        private System.Windows.Forms.TextBox txtboxVentiladores;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
     }
 }
 
