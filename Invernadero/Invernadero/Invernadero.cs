@@ -14,29 +14,37 @@ namespace Invernadero
         private Timer timer1;
         Double temp = 0.0;
         Double humedad = 0;
+        string tempmax;
+        string humedadmax;
         bool acventiladores = false;
         bool achumificadores = false;
+        private string nombreInvernadero;
 
         private ISession session;
         private IConnection connection;
-        private ITemporaryQueue temporaryQueue;
-        private IMessageProducer producer;
+        private ITemporaryQueue temporaryQueueTemp;
+        private ITemporaryQueue temporaryQueueConf;
+        private ITemporaryQueue temporaryQueueHum;
+        private IMessageProducer producerConf;
+        private IMessageProducer producerTemp;
+        private IMessageProducer producerHum;
+
         public Invernadero()
         {
 
             InitializeComponent();
-            lbbTemp.Text = "0.0 °C";
-            lblHumedad.Text = "0 %";
-            InitTimer();         
-            lblPrincipal.Text = "Invernadero";
-            ActiveMQInvernadero();
+            pnl2.BringToFront();
+
+
         }
+
+
 
         public void InitTimer()
         {
             timer1 = new Timer();
             timer1.Tick += new EventHandler(timer1_Tick);
-            timer1.Interval = 5000; // in miliseconds
+            timer1.Interval = 5000;
             timer1.Start();
 
         }
@@ -60,25 +68,42 @@ namespace Invernadero
             {
                 bajarHumedad();
             }
-            
+
             lbbTemp.Text = temp.ToString() + " °C";
             lblHumedad.Text = humedad.ToString() + " %";
-            var mensaje = this.CreateTextMessage(temp.ToString()+"|"+ humedad.ToString());
-            var respuesta = this.SendMessage(mensaje);
-            var res = respuesta as ITextMessage;
-            string[] respuestas = res.Text.Split('|');
-            string acciontemp = respuestas[0];
-            string aaccionhumifi = respuestas[1];
 
-            if (acciontemp== "ActivarVentiladores")
-            {
-                acventiladores = true;
-            }
-            else
-            {
-                acventiladores = false;
-            }
-            if (aaccionhumifi== "ActivarHumificador")
+
+            ComprobarRespuestaHumificador();
+            //var res = respuesta as ITextMessage;
+            //string[] respuestas = res.Text.Split('|');
+            //string acciontemp = respuestas[0];
+            //string aaccionhumifi = respuestas[1];
+
+            //if (acciontemp == "ActivarVentiladores")
+            //{
+            //    acventiladores = true;
+            //}
+            //else
+            //{
+            //    acventiladores = false;
+            //}
+            //if (aaccionhumifi == "ActivarHumificador")
+            //{
+            //    achumificadores = true;
+            //}
+            //else
+            //{
+            //    achumificadores = false;
+            //}
+        }
+
+        public void ComprobarRespuestaHumificador()
+        {
+            var mensaje = this.CreateTextMessage(humedad.ToString());
+            var respuesta = EnviarMensajeHum(mensaje);
+            var res = respuesta as ITextMessage;
+
+            if (res.Text == "true")
             {
                 achumificadores = true;
             }
@@ -86,6 +111,7 @@ namespace Invernadero
             {
                 achumificadores = false;
             }
+            
         }
 
         private void subirTemp()
@@ -129,7 +155,10 @@ namespace Invernadero
             String host = env("ACTIVEMQ_HOST", "localhost");
             int port = Int32.Parse(env("ACTIVEMQ_PORT", "61616"));
 
-            String destinationQueue = "control";
+            String destinationQueueTemp = "Temperatura";
+            String destinationQueueHum = "Humedad";
+            String destinationQueueConf = "Configuracion";
+
             this.responseBuffer = new Dictionary<string, AsyncMessageHelper>();
 
             String brokerUri = "activemq:tcp://" + host + ":" + port;
@@ -141,15 +170,28 @@ namespace Invernadero
                 connection.Start();
 
                 this.session = connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
-                var destination = session.GetDestination(destinationQueue);
+                var destinationTemp = session.GetDestination(destinationQueueTemp);
+                var destinationHum = session.GetDestination(destinationQueueHum);
+                var destinationConf = session.GetDestination(destinationQueueConf);
 
-                this.producer = session.CreateProducer(destination);
-                this.producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
+                this.producerTemp = session.CreateProducer(destinationTemp);
+                this.producerTemp.DeliveryMode = MsgDeliveryMode.NonPersistent;
+                this.producerHum = session.CreateProducer(destinationHum);
+                this.producerHum.DeliveryMode = MsgDeliveryMode.NonPersistent;
+                this.producerConf = session.CreateProducer(destinationConf);
+                this.producerConf.DeliveryMode = MsgDeliveryMode.NonPersistent;
 
-                this.temporaryQueue = session.CreateTemporaryQueue();
+                this.temporaryQueueHum = session.CreateTemporaryQueue();
+                this.temporaryQueueTemp = session.CreateTemporaryQueue();
+                this.temporaryQueueConf = session.CreateTemporaryQueue();
 
-                var responseConsumer = session.CreateConsumer(temporaryQueue);
-                responseConsumer.Listener += new MessageListener(responseConsumer_Listener);
+                var responseConsumerTemp = session.CreateConsumer(temporaryQueueTemp);
+                var responseConsumerHum = session.CreateConsumer(temporaryQueueHum);
+                var responseConsumerConf = session.CreateConsumer(temporaryQueueConf);
+
+                responseConsumerTemp.Listener += new MessageListener(responseConsumer_ListenerTemp);
+                responseConsumerHum.Listener += new MessageListener(responseConsumer_ListenerHum);
+                responseConsumerConf.Listener += new MessageListener(responseConsumer_ListenerConf);
             }
             catch(Exception ex)
             {
@@ -158,37 +200,114 @@ namespace Invernadero
             
         }
 
-        public void Stop()
+        public IMessage EnviarMensajeConf(IMessage message, int timeout = 10000)
         {
-            try
-            {
-                this.connection.Dispose();
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        public IMessage SendMessage(IMessage message, int timeout = 10000)
-        {
-            // Create a unique correlation ID which we will use to map response messages to request messages.
+            //id mensaje
             var correlationID = Guid.NewGuid().ToString();
             message.NMSCorrelationID = correlationID;
 
-            // Set the reply-to header to the temporary queue that we created so that the server knows where to return messages.
-            message.NMSReplyTo = this.temporaryQueue;
+            // a quien responder los mensajes
+            message.NMSReplyTo = this.temporaryQueueConf;
 
-            // Create a new AsyncMessageHelper.  This class is a helper class to make it easier for us to map response messages to request messages.
+            // AsyncMessageHelper Ayuda al mapeo de los mensajes clase que he encotnrado por internet.
             using (var asyncMessageHelper = new AsyncMessageHelper())
             {
-                // Add the async helper to the response buffer.
+                // añade el async helper al bufer de respuestas.
                 lock (this.responseBuffer)
                     this.responseBuffer[correlationID] = asyncMessageHelper;
 
-                // Send the message to the queue.
-                this.producer.Send(message);
+                // Enviar el mensaje al queue
+                this.producerConf.Send(message);
 
-                // Wait for a response for up to [timeout] seconds.  This blocks until the timeout expires or a message is received (.Set() is called on the trigger then, allowing execution to continue).
+                // Esperamos a que nos llegue respuesta o acabe el tiempo de espera no problem al ser asincrono,10 segundos de espera al menos.
+                asyncMessageHelper.Trigger.WaitOne(timeout, true);
+
+                // Either the timeout has expired, or a message was received with the same correlation ID as the request message.
+                IMessage responseMessage;
+                try
+                {
+                    // The Message property on the async helper will not have been set if no message was received within the timeout period.
+                    if (asyncMessageHelper.Message == null)
+                        throw new TimeoutException("Timed out while waiting for a response.");
+
+                    // We got the response message, cool!
+                    responseMessage = asyncMessageHelper.Message;
+                }
+                finally
+                {
+                    // Remove the async helper from the response buffer.
+                    lock (this.responseBuffer)
+                        this.responseBuffer.Remove(correlationID);
+                }
+
+                // Return the response message.
+                return responseMessage;
+            }
+        }
+        public IMessage EnviarMensajeHum(IMessage message, int timeout = 10000)
+        {
+            //id mensaje
+            var correlationID = Guid.NewGuid().ToString();
+            message.NMSCorrelationID = correlationID;
+
+            // a quien responder los mensajes
+            message.NMSReplyTo = this.temporaryQueueHum;
+
+            // AsyncMessageHelper Ayuda al mapeo de los mensajes clase que he encotnrado por internet.
+            using (var asyncMessageHelper = new AsyncMessageHelper())
+            {
+                // añade el async helper al bufer de respuestas.
+                lock (this.responseBuffer)
+                    this.responseBuffer[correlationID] = asyncMessageHelper;
+
+                // Enviar el mensaje al queue
+                this.producerHum.Send(message);
+
+                // Esperamos a que nos llegue respuesta o acabe el tiempo de espera no problem al ser asincrono,10 segundos de espera al menos.
+                asyncMessageHelper.Trigger.WaitOne(timeout, true);
+
+                // Either the timeout has expired, or a message was received with the same correlation ID as the request message.
+                IMessage responseMessage;
+                try
+                {
+                    // The Message property on the async helper will not have been set if no message was received within the timeout period.
+                    if (asyncMessageHelper.Message == null)
+                        throw new TimeoutException("Timed out while waiting for a response.");
+
+                    // We got the response message, cool!
+                    responseMessage = asyncMessageHelper.Message;
+                }
+                finally
+                {
+                    // Remove the async helper from the response buffer.
+                    lock (this.responseBuffer)
+                        this.responseBuffer.Remove(correlationID);
+                }
+
+                // Return the response message.
+                return responseMessage;
+            }
+        }
+        public IMessage EnviarMensajeTemp(IMessage message, int timeout = 10000)
+        {
+           //id mensaje
+            var correlationID = Guid.NewGuid().ToString();
+            message.NMSCorrelationID = correlationID;
+
+            // a quien responder los mensajes
+            message.NMSReplyTo = this.temporaryQueueTemp;
+
+            // AsyncMessageHelper Ayuda al mapeo de los mensajes clase que he encotnrado por internet.
+            using (var asyncMessageHelper = new AsyncMessageHelper())
+            {
+                // añade el async helper al bufer de respuestas.
+                lock (this.responseBuffer)
+                    this.responseBuffer[correlationID] = asyncMessageHelper;
+
+                // Enviar el mensaje al queue
+                this.producerTemp.Send(message);
+
+                // Esperamos a que nos llegue respuesta o acabe el tiempo de espera no problem al ser asincrono,10 segundos de espera al menos.
                 asyncMessageHelper.Trigger.WaitOne(timeout, true);
 
                 // Either the timeout has expired, or a message was received with the same correlation ID as the request message.
@@ -224,12 +343,53 @@ namespace Invernadero
                 : this.session.CreateTextMessage(text);
         }
 
-
         /// <summary>
         /// This event will fire when a response message is received from the temporary queue.  It will attempt to map received messages back
         /// to the response buffer.
         /// </summary>
-        void responseConsumer_Listener(IMessage message)
+        void responseConsumer_ListenerConf(IMessage message)
+        {
+            // Look for an async helper with the same correlation ID.
+            AsyncMessageHelper asyncMessageHelper;
+            lock (this.responseBuffer)
+            {
+                // If no async helper with the same correlation ID exists, then we've received some erranious message that we don't care about.
+                if (!this.responseBuffer.TryGetValue(message.NMSCorrelationID, out asyncMessageHelper))
+                    return;
+            }
+
+            // Set the Message property so we can access it in the send method.
+            asyncMessageHelper.Message = message;
+
+            // Fire the trigger so that the send method stops blocking and continues on its way.
+            asyncMessageHelper.Trigger.Set();
+        }
+        /// <summary>
+        /// This event will fire when a response message is received from the temporary queue.  It will attempt to map received messages back
+        /// to the response buffer.
+        /// </summary>
+        void responseConsumer_ListenerHum(IMessage message)
+        {
+            // Look for an async helper with the same correlation ID.
+            AsyncMessageHelper asyncMessageHelper;
+            lock (this.responseBuffer)
+            {
+                // If no async helper with the same correlation ID exists, then we've received some erranious message that we don't care about.
+                if (!this.responseBuffer.TryGetValue(message.NMSCorrelationID, out asyncMessageHelper))
+                    return;
+            }
+
+            // Set the Message property so we can access it in the send method.
+            asyncMessageHelper.Message = message;
+
+            // Fire the trigger so that the send method stops blocking and continues on its way.
+            asyncMessageHelper.Trigger.Set();
+        }
+        /// <summary>
+        /// This event will fire when a response message is received from the temporary queue.  It will attempt to map received messages back
+        /// to the response buffer.
+        /// </summary>
+        void responseConsumer_ListenerTemp(IMessage message)
         {
             // Look for an async helper with the same correlation ID.
             AsyncMessageHelper asyncMessageHelper;
@@ -266,6 +426,30 @@ namespace Invernadero
             }
             return defaultValue;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (txtboxHumedadmax.Text !="" && txtboxTemp.Text!="" && txtNombreInver.Text !="")
+            {
+                nombreInvernadero = txtNombreInver.Text;
+                tempmax = txtboxTemp.Text;
+                humedadmax = txtboxHumedadmax.Text;
+                lbbTemp.Text = "0.0 °C";
+                lblHumedad.Text = "0 %";
+                pnl1.BringToFront();
+
+                ActiveMQInvernadero();
+                var mensaje = this.CreateTextMessage(txtNombreInver.Text+"|"+tempmax + "|" + humedadmax);
+                this.EnviarMensajeConf(mensaje);
+
+                InitTimer();
+                lblPrincipal.Text = "Invernadero";
+       
+            }
+
+
+        }
+
 
     }
 }

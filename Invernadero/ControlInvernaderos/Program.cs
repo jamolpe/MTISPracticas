@@ -10,9 +10,11 @@ namespace ControlInvernaderos
     public class Program
     {
 
-        String info;
         private ISession session;
         private IMessageProducer replyProducer;
+        private Dictionary<string, int> referenciasTemp = new Dictionary<string, int>();
+        private Dictionary<string, int> referenciasHume = new Dictionary<string, int>();
+        
 
         Program()
         {
@@ -49,12 +51,17 @@ namespace ControlInvernaderos
             return defaultValue;
         }
 
+       
+
         public void IniciarActiveMQServer()
         {
 
             Console.WriteLine("Iniciando control..");
 
-            String destinationQueue = "control";
+            String destinationQueueTemp = "Temperatura";
+            String destinationQueueHumedad = "Humedad";
+            String destinationQueueConfiguracion = "Configuracion";
+
             String user = env("ACTIVEMQ_USER", "admin");
             String password = env("ACTIVEMQ_PASSWORD", "password");
             String host = env("ACTIVEMQ_HOST", "localhost");
@@ -72,15 +79,23 @@ namespace ControlInvernaderos
 
                 this.session = connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
 
-                var queue = session.GetDestination(destinationQueue);
+                var queuetemp = session.GetDestination(destinationQueueTemp);
+                var queuehum = session.GetDestination(destinationQueueHumedad);
+                var queueconf = session.GetDestination(destinationQueueConfiguracion);
 
                 this.replyProducer = this.session.CreateProducer();
                 this.replyProducer.DeliveryMode = MsgDeliveryMode.NonPersistent;
 
                 // Create and setup a consumer to consume (receive) messages from the queue that the client is sending messages to.
-                var consumer = this.session.CreateConsumer(queue);
+                var consumertemp = this.session.CreateConsumer(queuetemp);
+                var consumerhum = this.session.CreateConsumer(queuehum);
+                var consumerconf = this.session.CreateConsumer(queueconf);
+
+                
                 // Wire-up an event to be fired when a message is received from the queue.
-                consumer.Listener += new MessageListener(Calculo_Cliente);
+                consumertemp.Listener += new MessageListener(Calculo_Temp);
+                consumerhum.Listener += new MessageListener(Calculo_Hum);
+                consumerconf.Listener += new MessageListener(Calculo_Config);
             }
             catch (Exception ex)
             {
@@ -88,51 +103,108 @@ namespace ControlInvernaderos
             }
         }
 
-        public void rellenarinfo(String str)
-        {
-            Console.WriteLine(str);
-        }
-        public void Calculo_Cliente(IMessage message)
+        public void Calculo_Hum(IMessage message)
         {
             try
             {
                 // Create the response message.  We'll send a simple text-based message back.
                 var response = this.session.CreateTextMessage();
 
-
                 // Determine the text to send back to the client.
                 var textMessage = message as ITextMessage;
 
-                String info = "Temperatura y humedad de invernadero " + message.NMSReplyTo.ToString() + " es -> " + textMessage.Text;
+                String info = "Humedad invernadero " + message.NMSReplyTo.ToString() + " es -> " + textMessage.Text;
 
 
                 if (textMessage == null)
                     response.Text = "false";
                 else
                 {
-                    string[] datos = textMessage.Text.Split('|');
-                    string temperatura = datos[0];
+                    int hum = int.Parse(textMessage.Text.ToString());
+                    if (hum > 50)
+                    {
+                        response.Text = "true";
+                    }
+                    else
+                    {
+                        response.Text = "false";
+                    }
+                }
+                // Set the correlation ID to that of the received message.
+                response.NMSCorrelationID = message.NMSCorrelationID;
 
-                    string humedad = datos[1];
-                    double temp = Double.Parse(temperatura);
-                    if (temp > 50.0)
+                // Send the response message to the reply-to destination as received in the message header.  This is the
+                // temporary queue that we created in the client application.
+                this.replyProducer.Send(message.NMSReplyTo, response);
+                rellenarinfo(info);
+            }
+            catch (NMSException ex)
+            {
+                Console.WriteLine("error " + ex.ToString());
+            }
+        }
+        public void Calculo_Config(IMessage message)
+        {
+            try
+            {
+                String info = "Configuracion realizada";
+                // Create the response message.  We'll send a simple text-based message back.
+                var response = this.session.CreateTextMessage();
+
+
+                // Determine the text to send back to the client.
+                var textMessage = message as ITextMessage;
+    
+                if (textMessage == null)
+                    response.Text = "false";
+                else
+                {
+                    string[] datos = textMessage.Text.Split('|');
+                    referenciasTemp.Add(datos[0],Int32.Parse(datos[1]));
+                    referenciasHume.Add(datos[0], Int32.Parse(datos[2]));
+                }
+
+                // Set the correlation ID to that of the received message.
+                response.NMSCorrelationID = message.NMSCorrelationID;
+
+                // Send the response message to the reply-to destination as received in the message header.  This is the
+                // temporary queue that we created in the client application.
+                this.replyProducer.Send(message.NMSReplyTo, response);
+                rellenarinfo(info);
+            }
+            catch (NMSException ex)
+            {
+                Console.WriteLine("error " + ex.ToString());
+            }
+        }
+
+        public void Calculo_Temp(IMessage message)
+        {
+            try
+            {
+                // Create the response message.  We'll send a simple text-based message back.
+                var response = this.session.CreateTextMessage();
+
+                // Determine the text to send back to the client.
+                var textMessage = message as ITextMessage;
+
+                String info = "Temperatura invernadero " + message.NMSReplyTo.ToString() + " es -> " + textMessage.Text;
+
+
+                if (textMessage == null)
+                    response.Text = "false";
+                else
+                {
+                    int temp = int.Parse(textMessage.Text.ToString());
+                    if (temp>50)
                     {
-                        response.Text = "ActivarVentiladores|";
-                        rellenarinfo("activados los ventiladores");
+                        response.Text = "true";
                     }
                     else
                     {
-                        response.Text = "DesactivarVentiladores|";
+                        response.Text = "false";
                     }
-                    if (Int32.Parse(humedad) > 50)
-                    {
-                        response.Text += "ActivarHumificador";
-                        rellenarinfo("activados los humificadores");
-                    }
-                    else
-                    {
-                        response.Text += "DesactivarHumificador";
-                    }
+                    
 
                 }
 
@@ -148,6 +220,11 @@ namespace ControlInvernaderos
             {
                 Console.WriteLine("error " + ex.ToString());
             }
+        }
+
+        public void rellenarinfo(String str)
+        {
+            Console.WriteLine(str);
         }
     }
 }
