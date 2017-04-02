@@ -86,13 +86,10 @@ namespace ControlInvernaderos
                 this.replyProducer = this.session.CreateProducer();
                 this.replyProducer.DeliveryMode = MsgDeliveryMode.NonPersistent;
 
-                // Create and setup a consumer to consume (receive) messages from the queue that the client is sending messages to.
                 var consumertemp = this.session.CreateConsumer(queuetemp);
                 var consumerhum = this.session.CreateConsumer(queuehum);
                 var consumerconf = this.session.CreateConsumer(queueconf);
 
-                
-                // Wire-up an event to be fired when a message is received from the queue.
                 consumertemp.Listener += new MessageListener(Calculo_Temp);
                 consumerhum.Listener += new MessageListener(Calculo_Hum);
                 consumerconf.Listener += new MessageListener(Calculo_Config);
@@ -107,10 +104,8 @@ namespace ControlInvernaderos
         {
             try
             {
-                // Create the response message.  We'll send a simple text-based message back.
-                var response = this.session.CreateTextMessage();
 
-                // Determine the text to send back to the client.
+                var response = this.session.CreateTextMessage();
                 var textMessage = message as ITextMessage;
                 string[] mns = textMessage.Text.Split('|');
                 String info = "Humedad invernadero " + mns[0] + " es -> " + mns[1];
@@ -132,11 +127,9 @@ namespace ControlInvernaderos
                         response.Text = "false";
                     }
                 }
-                // Set the correlation ID to that of the received message.
+
                 response.NMSCorrelationID = message.NMSCorrelationID;
 
-                // Send the response message to the reply-to destination as received in the message header.  This is the
-                // temporary queue that we created in the client application.
                 this.replyProducer.Send(message.NMSReplyTo, response);
                 rellenarinfo(info);
             }
@@ -150,11 +143,10 @@ namespace ControlInvernaderos
             try
             {
                 String info = "";
-                // Create the response message.  We'll send a simple text-based message back.
+           
                 var response = this.session.CreateTextMessage();
 
 
-                // Determine the text to send back to the client.
                 var textMessage = message as ITextMessage;
     
                 if (textMessage == null)
@@ -169,11 +161,9 @@ namespace ControlInvernaderos
                     info += "Temperatura maxima = " + datos[1] + "\n";
                 }
 
-                // Set the correlation ID to that of the received message.
+   
                 response.NMSCorrelationID = message.NMSCorrelationID;
 
-                // Send the response message to the reply-to destination as received in the message header.  This is the
-                // temporary queue that we created in the client application.
                 this.replyProducer.Send(message.NMSReplyTo, response);
                 rellenarinfo(info);
             }
@@ -187,10 +177,10 @@ namespace ControlInvernaderos
         {
             try
             {
-                // Create the response message.  We'll send a simple text-based message back.
+                // Mensaje de respuesta
                 var response = this.session.CreateTextMessage();
 
-                // Determine the text to send back to the client.
+             
                 var textMessage = message as ITextMessage;
                 string[] mns = textMessage.Text.Split('|');
                 String info = "Temperatura invernadero " + mns[0] + " es -> " + mns[1];
@@ -211,15 +201,12 @@ namespace ControlInvernaderos
                     {
                         response.Text = "false";
                     }
-                    
 
                 }
 
-                // Set the correlation ID to that of the received message.
+                // correlation ID
                 response.NMSCorrelationID = message.NMSCorrelationID;
 
-                // Send the response message to the reply-to destination as received in the message header.  This is the
-                // temporary queue that we created in the client application.
                 this.replyProducer.Send(message.NMSReplyTo, response);
                 rellenarinfo(info);
             }

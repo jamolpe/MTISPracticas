@@ -329,9 +329,6 @@ namespace Invernadero
             }
         }
 
-        /// <summary>
-        /// Creates a text message for use with the client.
-        /// </summary>
         public ITextMessage CreateTextMessage(string text = null)
         {
             return text == null
@@ -339,67 +336,52 @@ namespace Invernadero
                 : this.session.CreateTextMessage(text);
         }
 
-        /// <summary>
-        /// This event will fire when a response message is received from the temporary queue.  It will attempt to map received messages back
-        /// to the response buffer.
-        /// </summary>
+
         void responseConsumer_ListenerConf(IMessage message)
         {
-            // Look for an async helper with the same correlation ID.
             AsyncMessageHelper asyncMessageHelper;
             lock (this.responseBuffer)
             {
-                // If no async helper with the same correlation ID exists, then we've received some erranious message that we don't care about.
+                
                 if (!this.responseBuffer.TryGetValue(message.NMSCorrelationID, out asyncMessageHelper))
                     return;
             }
 
-            // Set the Message property so we can access it in the send method.
             asyncMessageHelper.Message = message;
 
-            // Fire the trigger so that the send method stops blocking and continues on its way.
             asyncMessageHelper.Trigger.Set();
         }
-        /// <summary>
-        /// This event will fire when a response message is received from the temporary queue.  It will attempt to map received messages back
-        /// to the response buffer.
-        /// </summary>
+        
         void responseConsumer_ListenerHum(IMessage message)
         {
-            // Look for an async helper with the same correlation ID.
+            
             AsyncMessageHelper asyncMessageHelper;
             lock (this.responseBuffer)
             {
-                // If no async helper with the same correlation ID exists, then we've received some erranious message that we don't care about.
                 if (!this.responseBuffer.TryGetValue(message.NMSCorrelationID, out asyncMessageHelper))
                     return;
             }
 
-            // Set the Message property so we can access it in the send method.
             asyncMessageHelper.Message = message;
 
-            // Fire the trigger so that the send method stops blocking and continues on its way.
             asyncMessageHelper.Trigger.Set();
         }
-        /// <summary>
-        /// This event will fire when a response message is received from the temporary queue.  It will attempt to map received messages back
-        /// to the response buffer.
-        /// </summary>
+
         void responseConsumer_ListenerTemp(IMessage message)
         {
-            // Look for an async helper with the same correlation ID.
+            //async helper con el mismo correlation ID.
             AsyncMessageHelper asyncMessageHelper;
             lock (this.responseBuffer)
             {
-                // If no async helper with the same correlation ID exists, then we've received some erranious message that we don't care about.
+                // Si no hay hemos recibido un error.
                 if (!this.responseBuffer.TryGetValue(message.NMSCorrelationID, out asyncMessageHelper))
                     return;
             }
 
-            // Set the Message property so we can access it in the send method.
+            // Set del mensaje
             asyncMessageHelper.Message = message;
 
-            // Fire the trigger so that the send method stops blocking and continues on its way.
+            // activar el trigger
             asyncMessageHelper.Trigger.Set();
         }
 
